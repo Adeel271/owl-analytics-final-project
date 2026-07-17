@@ -1,0 +1,30 @@
+DATA QUALITY REPORT
+Input rows: 9990
+Input columns: 13
+Duplicate rows detected: 8
+Rows with invalid numeric values: 381
+Rows with invalid timestamps: 110
+Negative volume values detected: 30
+Missing values before cleaning:
+symbol                     0
+interval                   0
+open_time                 35
+open                      40
+high                      41
+low                       42
+close                     44
+volume                    41
+close_time                35
+quote_volume              44
+trade_count               40
+taker_buy_base_volume      0
+taker_buy_quote_volume     0
+
+Output rows: 9465
+Rows removed: 525
+Remaining duplicate rows: 0
+Remaining missing values: 0
+Unique cleaned symbols: 10
+Output file: data/clean/cleaned_market_data.csv
+Balanced pandas sample rows: 50
+Sample result file: results/pandas_sample_results.csv
