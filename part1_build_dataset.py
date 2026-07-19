@@ -35,7 +35,7 @@ LOG_FILE=Path("results/api_download.log")
 RUNTIME_FILE=Path("results/runtime_comparison.csv")
 FIELDS=["symbol","interval","open_time","open","high","low","close","volume","close_time","quote_volume","trade_count","taker_buy_base_volume","taker_buy_quote_volume"]
 
-# Log Lock ensures only one request is sent to the Log file at a time so the requests do not overlap. 
+# Rate Lock ensures only one request is sent to the Log file at a time so the requests do not overlap. 
 log_lock=threading.Lock(); request_semaphore=threading.Semaphore(MAX_WORKERS)
 rate_lock=threading.Lock(); request_times=deque()
 
