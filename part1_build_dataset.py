@@ -10,11 +10,28 @@ from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import urlopen
 
+# Using Cryptocurrency tags provided in CW Brief
+
 SYMBOLS=["BTCUSDT","ETHUSDT","BNBUSDT","SOLUSDT","XRPUSDT","ADAUSDT","DOGEUSDT","AVAXUSDT","LINKUSDT","DOTUSDT"]
+
+# Setting parameters to process request issued to attain Binance Data
+
 INTERVAL="1h"; LIMIT=1000; MAX_WORKERS=5; MAX_REQUESTS_PER_MINUTE=100
+
+# This URL is linked to Public Library of Binance. 
+
 BASE_URL="https://data-api.binance.vision/api/v3/klines"
+
+# Saving clean data
+
 DATA_FILE=Path("data/clean/clean_market_data.csv")
+
+# This records when each API request starts, finishes or fails.
+
 LOG_FILE=Path("results/api_download.log")
+
+# This records the time taken by each thread to obtain data 
+
 RUNTIME_FILE=Path("results/runtime_comparison.csv")
 FIELDS=["symbol","interval","open_time","open","high","low","close","volume","close_time","quote_volume","trade_count","taker_buy_base_volume","taker_buy_quote_volume"]
 log_lock=threading.Lock(); request_semaphore=threading.Semaphore(MAX_WORKERS)
