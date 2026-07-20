@@ -5,7 +5,8 @@ from pathlib import Path
 import pandas as pd
 
 
-INPUT=Path('data/messy/messy_market_data.csv'); OUTPUT=Path('data/clean/cleaned_market_data.csv'); QUALITY=Path('results/data_quality_report.txt'); SAMPLE=Path('results/pandas_sample_results.csv')
+INPUT=Path('data/messy/messy_market_data.csv'); OUTPUT=Path('data/clean/cleaned_market_data.csv'); 
+QUALITY=Path('results/data_quality_report.txt'); SAMPLE=Path('results/pandas_sample_results.csv')
 NUMERIC=['open','high','low','close','volume','quote_volume','trade_count','taker_buy_base_volume','taker_buy_quote_volume']
 EXPECTED={'BTCUSDT','ETHUSDT','BNBUSDT','SOLUSDT','XRPUSDT','ADAUSDT','DOGEUSDT','AVAXUSDT','LINKUSDT','DOTUSDT'}
 
@@ -13,7 +14,8 @@ def main():
     df=pd.read_csv(INPUT); before_rows=len(df); before_missing=df.isna().sum(); before_dupes=int(df.duplicated().sum())
     print(f'Loaded {INPUT}\nRows: {df.shape[0]}\nColumns: {df.shape[1]}'); print(df.head(10)); print(df.dtypes)
 
-    print('\nMissing values:\n',before_missing.sort_values(ascending=False)); print('Most affected column:',before_missing.idxmax())
+    print('\nMissing values:\n',before_missing.sort_values(ascending=False)); 
+    print('Most affected column:',before_missing.idxmax())
     for c in NUMERIC: df[c]=pd.to_numeric(df[c],errors='coerce')
 
     df['open_time']=pd.to_datetime(df['open_time'],errors='coerce',utc=True); df['close_time']=pd.to_datetime(df['close_time'],errors='coerce',utc=True)
@@ -29,7 +31,7 @@ def main():
 
     df['price_range']=df['high']-df['low']; df['price_change']=df['close']-df['open']; df['percent_change']=(df['price_change']/df['open'])*100
     df['candle_direction']=df['price_change'].map(lambda x:'up' if x>0 else ('down' if x<0 else 'flat'))
-    
+
     df=df.sort_values(['symbol','open_time']).reset_index(drop=True); OUTPUT.parent.mkdir(parents=True,exist_ok=True); df.to_csv(OUTPUT,index=False)
     balanced=(df.groupby('symbol',group_keys=False).apply(lambda g:g.sample(min(5,len(g)),random_state=42),include_groups=True).reset_index(drop=True))
 
