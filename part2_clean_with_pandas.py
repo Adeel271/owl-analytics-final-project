@@ -18,11 +18,13 @@ def main():
     print('Most affected column:',before_missing.idxmax())
     for c in NUMERIC: df[c]=pd.to_numeric(df[c],errors='coerce')
 
-    df['open_time']=pd.to_datetime(df['open_time'],errors='coerce',utc=True); df['close_time']=pd.to_datetime(df['close_time'],errors='coerce',utc=True)
+    df['open_time']=pd.to_datetime(df['open_time'],errors='coerce',utc=True); 
+    df['close_time']=pd.to_datetime(df['close_time'],errors='coerce',utc=True)
     df['symbol']=df['symbol'].astype('string').str.upper().str.strip().str.replace('/','',regex=False).str.replace('-','',regex=False)
 
     invalid_symbols=~df['symbol'].isin(EXPECTED); df.loc[invalid_symbols,'symbol']=pd.NA
-    invalid_numeric=int(df[NUMERIC].isna().any(axis=1).sum()); invalid_dates=int(df[['open_time','close_time']].isna().any(axis=1).sum()); negative_volume=int((df['volume']<0).fillna(False).sum())
+    invalid_numeric=int(df[NUMERIC].isna().any(axis=1).sum()); invalid_dates=int(df[['open_time','close_time']].isna().any(axis=1).sum()); 
+    negative_volume=int((df['volume']<0).fillna(False).sum())
     df.loc[df['volume']<0,'volume']=pd.NA
 
     df=df.drop_duplicates().dropna(subset=['symbol','interval','open_time','close_time']+NUMERIC)
