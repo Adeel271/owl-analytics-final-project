@@ -41,20 +41,30 @@ def main():
     df['close_time']=pd.to_datetime(df['close_time'],errors='coerce',utc=True)
     df['symbol']=df['symbol'].astype('string').str.upper().str.strip().str.replace('/','',regex=False).str.replace('-','',regex=False)
 
+    # Identify invalid symbols, numeric values, and timestamps, and replace them with NaN. Also, identify negative volume values and replace them with NaN.
+
     invalid_symbols=~df['symbol'].isin(EXPECTED); df.loc[invalid_symbols,'symbol']=pd.NA
     invalid_numeric=int(df[NUMERIC].isna().any(axis=1).sum()); invalid_dates=int(df[['open_time','close_time']].isna().any(axis=1).sum()); 
     negative_volume=int((df['volume']<0).fillna(False).sum())
     df.loc[df['volume']<0,'volume']=pd.NA
 
+    # Drop duplicates and rows with missing values in critical columns, filter out rows with invalid numeric values, timestamps, and negative volumes, and round the 'trade_count' column to integers.
+
     df=df.drop_duplicates().dropna(subset=['symbol','interval','open_time','close_time']+NUMERIC)
     df=df[(df[['open','high','low','close','volume','quote_volume']]>=0).all(axis=1) & (df['high']>=df['low']) & (df['trade_count']>=0)]
     df['trade_count']=df['trade_count'].round().astype('int64')
 
+    # Create new columns for price range, price change, percent change, and candle direction, and sort the DataFrame by 'symbol' and 'open_time'.
+
     df['price_range']=df['high']-df['low']; df['price_change']=df['close']-df['open']; df['percent_change']=(df['price_change']/df['open'])*100
     df['candle_direction']=df['price_change'].map(lambda x:'up' if x>0 else ('down' if x<0 else 'flat'))
 
+    # Sort the DataFrame by 'symbol' and 'open_time', save the cleaned DataFrame to a CSV file, and create a balanced sample of the cleaned data.
+
     df=df.sort_values(['symbol','open_time']).reset_index(drop=True); OUTPUT.parent.mkdir(parents=True,exist_ok=True); df.to_csv(OUTPUT,index=False)
     balanced=(df.groupby('symbol',group_keys=False).apply(lambda g:g.sample(min(5,len(g)),random_state=42),include_groups=True).reset_index(drop=True))
+
+    # Generate a summary of the balanced sample, including the number of records, average close price, average volume, and average percent change for each symbol, and save it to a CSV file.
 
 
     summary=balanced.groupby('symbol').agg(records=('symbol','size'),average_close=('close','mean'),average_volume=('volume','mean'),average_percent_change=('percent_change','mean')).reset_index(); summary.to_csv(SAMPLE,index=False)
