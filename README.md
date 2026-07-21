@@ -45,7 +45,7 @@ Following Python command can be utilized to run the part aloccated by Team #3.
 Open `part3_spark_analytics.ipynb` in Google Colab. Upload the repository files or mount Google Drive, update the input path if necessary, and run all cells. The notebook creates `results/spark_market_summary.csv`.
 
 ## Reports
-- [Report to Stelios](reports/report_to_stelios.md)
+- [Project Report](reports/report_to_stelios.md)
 - [Reflection](reports/reflection.md)
 
 ## Submitted files
