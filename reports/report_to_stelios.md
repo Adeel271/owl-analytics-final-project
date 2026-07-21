@@ -2,7 +2,7 @@
 
 ## Executive summary
 
-This project implements an end-to-end market-data pipeline for the Owl Analytics scenario. It collects hourly candlestick data for ten cryptocurrency pairs from the public Binance market-data API, deliberately damages a copy to simulate realistic quality problems, cleans the damaged data with pandas, and analyses the full cleaned dataset with PySpark and Spark SQL. The design separates collection, quality control and analytics so that each stage has a clear responsibility and produces an auditable output for the next team.
+This project implements end to end market data pipe line for Owl Analytics. It collects hourly candlestick data for ten cryptocurrency pairs from the public Binance market-data API, deliberately damages a copy to simulate realistic quality problems, cleans the damaged data with pandas, and analyses the full cleaned dataset with PySpark and Spark SQL. The software separates ot the collection, qu;ality and control of the data so that each phase is individualy understood to generate a satisfied outcome. 
 
 ## Data collection and concurrency
 
