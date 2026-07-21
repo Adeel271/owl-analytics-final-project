@@ -4,19 +4,38 @@ Run: python part2_clean_with_pandas.py
 from pathlib import Path
 import pandas as pd
 
+# Loads the aquireud data sets with possible missing values, duplicates, and invalid data types. Cleans the data and saves a cleaned version to a new CSV file. Also generates a data quality report and a balanced sample of the cleaned data.
 
 INPUT=Path('data/messy/messy_market_data.csv'); OUTPUT=Path('data/clean/cleaned_market_data.csv'); 
+
+# Generate a data quality report and a balanced sample of the cleaned data.
+
 QUALITY=Path('results/data_quality_report.txt'); SAMPLE=Path('results/pandas_sample_results.csv')
+
+# Define the expected numeric columns and the expected symbols for validation.
+
 NUMERIC=['open','high','low','close','volume','quote_volume','trade_count','taker_buy_base_volume','taker_buy_quote_volume']
+
+# Define the expected symbols for validation.
+
 EXPECTED={'BTCUSDT','ETHUSDT','BNBUSDT','SOLUSDT','XRPUSDT','ADAUSDT','DOGEUSDT','AVAXUSDT','LINKUSDT','DOTUSDT'}
+
+# Define the main function to load, clean, and save the data, as well as generate the data quality report and balanced sample.
 
 def main():
     df=pd.read_csv(INPUT); before_rows=len(df); before_missing=df.isna().sum(); before_dupes=int(df.duplicated().sum())
     print(f'Loaded {INPUT}\nRows: {df.shape[0]}\nColumns: {df.shape[1]}'); print(df.head(10)); print(df.dtypes)
 
+# Print the number of missing values per column before cleaning, and identify the most affected column.
+
     print('\nMissing values:\n',before_missing.sort_values(ascending=False)); 
     print('Most affected column:',before_missing.idxmax())
+
+# Convert the expected numeric columns to numeric data types, coercing errors to NaN.
+
     for c in NUMERIC: df[c]=pd.to_numeric(df[c],errors='coerce')
+
+    # Convert the 'open_time' and 'close_time' columns to datetime, coercing errors to NaT, and standardize the 'symbol' column by converting to uppercase, stripping whitespace, and removing special characters.
 
     df['open_time']=pd.to_datetime(df['open_time'],errors='coerce',utc=True); 
     df['close_time']=pd.to_datetime(df['close_time'],errors='coerce',utc=True)
